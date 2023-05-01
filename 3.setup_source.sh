@@ -1,6 +1,5 @@
 current_dir=$(pwd)
 
-
 if [ ! -d "bin_tools" ]; then
     mkdir -p $current_dir/bin_tools
 fi
@@ -16,9 +15,9 @@ chmod a+x $current_dir/bin_tools/repo
 add_android_sdk_to_path() {
     local current_dir="$1"
     local profile_file="$HOME/.profile"
-    
+
     text_to_add="if [ -d \"$current_dir/bin_tools\" ] ; then\n    export PATH=\"$current_dir/bin_tools:\$PATH\"\nfi\n"
-    
+
     # check if platform-tools directory exists
     if [ -d "$current_dir/bin_tools" ]; then
         # add platform-tools directory to PATH
@@ -52,13 +51,24 @@ if ! grep -q 'export CCACHE_EXEC=/usr/bin/ccache' ~/.bashrc; then
   echo 'export CCACHE_EXEC=/usr/bin/ccache' >> ~/.bashrc
 fi
 
+
+#设置缓存的目录
+if [ ! -d "ccache" ]; then
+    mkdir -p $current_dir/ccache
+fi
+
+if ! grep -q "export CCACHE_DIR=$current_dir/ccache" ~/.bashrc; then
+  echo "export CCACHE_DIR=$current_dir/ccache" >> ~/.bashrc
+fi
+
+
 source ~/.bashrc
+  echo "may you should exec:source ~/.bashrc"
 
 ccache -M 50G
 
 cd $current_dir/android/lineage
 repo init -u https://github.com/LineageOS/android.git -b lineage-20.0 --git-lfs
-
 
 
 
